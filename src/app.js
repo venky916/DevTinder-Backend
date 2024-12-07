@@ -2,28 +2,18 @@ const express = require('express')
 
 const app = express();
 
-app.use('/', (req, res) => {
-    res.send("HAHAHAHAHAHAHAHAHAHA")
-})
+
 
 app.get('/user', (req, res) => {
+    console.log(req.query) //key value both are strings
     res.send({"firstName":"Venkatesh","LastName":"Maliga"})
 })
 
-app.post('/user', (req, res) => {
-    console.log("Data added")
-    res.send('Data Saved in data bases')
+app.get('/user/:userId/:name', (req, res) => {
+    console.log(req.params) //key value both are strings all the : must be present i url
+    res.send({ "firstName": "Venkatesh", "LastName": "Maliga" })
 })
 
-app.delete('/user', (req, res) => {
-    console.log("delete me");
-    res.send('Data Deleted Successfully')
-})
-
-
-app.use("/", (req, res) => {
-    res.send('Hello World Welcome to node js')
-})
 
 
 app.listen(3000, () => {
