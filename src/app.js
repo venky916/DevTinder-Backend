@@ -1,18 +1,26 @@
 const express = require('express')
 
 const app = express();
+const {adminAuth,UserAuth} = require('./middlewares/auth')
 
+app.use("/admin", adminAuth)
 
-
-app.get('/user', (req, res) => {
-    console.log(req.query) //key value both are strings
-    res.send({"firstName":"Venkatesh","LastName":"Maliga"})
+app.get('/admin/get-data', (req, res) => {
+    res.send('Getting all Data')
 })
 
-app.get('/user/:userId/:name', (req, res) => {
-    console.log(req.params) //key value both are strings all the : must be present i url
-    res.send({ "firstName": "Venkatesh", "LastName": "Maliga" })
+app.delete('/admin/delete-me', (req, res) => {
+    res.send('deleting all data')
 })
+app.get('/user/login', (req, res) => {
+    res.send('login Route')
+})
+
+app.get('/user/data',UserAuth, (req, res) => {
+    res.send('user Route')
+})
+
+
 
 
 
