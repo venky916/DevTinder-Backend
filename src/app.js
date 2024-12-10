@@ -1,24 +1,37 @@
 const express = require('express')
 
 const app = express();
-const {adminAuth,UserAuth} = require('./middlewares/auth')
 
-app.use("/admin", adminAuth)
 
-app.get('/admin/get-data', (req, res) => {
-    res.send('Getting all Data')
+app.use('/', (err, req, res, next) => {
+    console.log("Error rout top")
+    if (err) {
+        res.status(500).send('Error occur check the code')
+    }
 })
 
-app.delete('/admin/delete-me', (req, res) => {
-    res.send('deleting all data')
-})
-app.get('/user/login', (req, res) => {
-    res.send('login Route')
+
+app.get('/user', (req, res) => {
+    // try {
+    //     throw new Error('err message');
+    // } catch (error) {
+        
+    // }
+
+    throw new Error('err message');
+
+    
+    res.send('Error came ?')
 })
 
-app.get('/user/data',UserAuth, (req, res) => {
-    res.send('user Route')
+app.use('/', (err, req, res, next) => {
+    console.log("Error rout")
+    if (err) {
+        res.status(500).send('Error occur check the code')
+    }
 })
+
+
 
 
 
