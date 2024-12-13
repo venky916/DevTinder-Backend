@@ -1,5 +1,5 @@
 '''
-#day 1
+# day 1
 -Create a repository
 -Initialize the repository
 -node_modules, package.json, package-lock.json
@@ -12,7 +12,7 @@
 -What is the use of "-g" while npm install
 -Difference between caret and tilde ( ^ vs ~ )
 
-#day 2
+# day 2
 -initialize git
 -gitignore add
 -don't put package.json and package-lock.json on git
@@ -22,10 +22,10 @@
 -Install Postman app and make a workspace/collection > test API call
 -Explore routing and use of ?, + , (), * in the routes
 -Use of regex in routes /a/ , /.*fly$/
--Reading the query params in the routes
--Reading the dynamic routes
+-Reading the query params in the routes req.query
+-Reading the dynamic routes req.params
 
-#day 3
+# day 3
 -Multiple Route Handlers - Play with the code
 -next()
 -next function and errors along with res.send()
@@ -36,6 +36,32 @@
 -Write a dummy auth middleware for admin
 -Write a dummy auth middleware for all user routes, except /user/login
 -Error Handling using app.use("/", (err, req, res, next) = {});
+
+# day4
+- Create a free cluster on MongoDB official website (Mongo Atlas)
+- Install mongoose library
+- Connect your application to the Database "Connection-url"/devTinder (NamasteNode)
+- Call the connectDB function and connect to database before starting application on 3000
+- Create a userSchema & user Model
+- Create POST /sigup API to add data to database
+- Push some documents using API calls from postman
+- Error Handling using try , catch
+
+# day5
+- JS object vs JSON (difference)
+- Add the express.json middleware to your app
+- Make your signup API dynamic to recive data from the end user
+- User.findOne with duplucate email ids, which object returned\ 
+- API- Get user by email
+- API - Feed API - GET /feed - get all the users from the database
+- API - Get user by ID
+
+- Create a delete user API
+- Difference between PATCH and PUT
+- API - Update a user
+- Explore the Mongoose Documention for Model methods
+- What are options in a Model.findOneAndUpdate method, explore more about it
+- API - Update the user with email ID
 
 
 '''
