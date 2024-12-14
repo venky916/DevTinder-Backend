@@ -3,30 +3,53 @@ const connectDB = require('./config/database');
 const User = require('./models/user');
 const app = express();
 const bcrypt = require('bcrypt')
-const {signUpValidation} = require('./helper/validation')
+const { signUpValidation } = require('./helper/validation')
 
 app.use(express.json())
 
 app.post('/signup', async (req, res) => {
-    
+
     try {
         signUpValidation(req);
         const { firstName, lastName, emailId, password } = req.body;
 
         const passwordHash = await bcrypt.hash(password, 10)
         // console.log(passwordHash)
-        
+
         const user = new User({
             firstName,
             lastName,
             emailId,
-            password :passwordHash
+            password: passwordHash
         })
         await user.save();
         res.send('Data added to database successfully')
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         res.status(401).send('Error in saving in database' + error.message)
+    }
+})
+
+app.post('/login', async (req, res) => {
+    try {
+        const { emailId, password } = req.body;
+
+        const user = await User.findOne({ emailId: emailId });
+
+        if (!user) {
+            throw new Error('Invalid Credentials')
+        }
+
+        const checkPassword = await bcrypt.compare(password, user.password);
+
+        if (!checkPassword) {
+            throw new Error('Invalid Credentials')
+        }
+
+        res.send('Login Successfully')
+
+    } catch (error) {
+        res.status(401).send('Error :' + error.message)
     }
 })
 
