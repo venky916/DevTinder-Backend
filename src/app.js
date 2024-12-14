@@ -11,7 +11,8 @@ app.post('/signup', async (req, res) => {
         await user.save();
         res.send('Data added to database successfully')
     } catch (error) {
-        res.status(400).send('Error in saving in database', error)
+        console.log(error)
+        res.status(401).send('Error in saving in database'+ error.message)
     }
 })
 
@@ -54,8 +55,11 @@ app.patch('/update/:id', async (req, res) => {
     const id = req.params.id;
     const user = req.body;
     try {
-        const response = await User.findByIdAndUpdate(id, user,{returnDocument:'after'});
-        console.log(response);
+        const response = await User.findByIdAndUpdate(id, user, {
+            returnDocument: 'after',
+            runValidators:true
+        });
+        // console.log(response);
         res.send('Updated successfully')
     } catch (error) {
         res.status(500).send('Something went wrong')
