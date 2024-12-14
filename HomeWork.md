@@ -70,6 +70,12 @@
  - Create a custom validate function for gender
  - Improve the DB schema - PUT all appropiate validations on each field in Schema
  - Add timestamps to the userSchema
+ - Add API level validation on Patch request & Signup post api
+ - DATA Sanitizing - Add API validation for each field
+
+ - Validate data in Signup API
+ - Install bcrypt package
+ - Create PasswordHash using bcrypt.hash & save the user is excrupted password
 
 
 '''

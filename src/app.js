@@ -2,17 +2,31 @@ const express = require('express');
 const connectDB = require('./config/database');
 const User = require('./models/user');
 const app = express();
+const bcrypt = require('bcrypt')
+const {signUpValidation} = require('./helper/validation')
 
 app.use(express.json())
 
 app.post('/signup', async (req, res) => {
-    const user = new User(req.body)
+    
     try {
+        signUpValidation(req);
+        const { firstName, lastName, emailId, password } = req.body;
+
+        const passwordHash = await bcrypt.hash(password, 10)
+        // console.log(passwordHash)
+        
+        const user = new User({
+            firstName,
+            lastName,
+            emailId,
+            password :passwordHash
+        })
         await user.save();
         res.send('Data added to database successfully')
     } catch (error) {
         console.log(error)
-        res.status(401).send('Error in saving in database'+ error.message)
+        res.status(401).send('Error in saving in database' + error.message)
     }
 })
 
@@ -55,23 +69,31 @@ app.patch('/update/:id', async (req, res) => {
     const id = req.params.id;
     const user = req.body;
     try {
+        const isAllowed = ["photoUrl", "gender", "age", "firstName", "skills"]
+        const isAllowedCheck = Object.keys(user).every(key => isAllowed.includes(key));
+        if (!isAllowedCheck) {
+            throw new Error('Cannot update')
+        }
+        if (user?.skills?.length > 10) {
+            throw new Error("Skill cannot be more than 10")
+        }
         const response = await User.findByIdAndUpdate(id, user, {
             returnDocument: 'after',
-            runValidators:true
+            runValidators: true
         });
         // console.log(response);
         res.send('Updated successfully')
     } catch (error) {
-        res.status(500).send('Something went wrong')
+        res.status(500).send('Something went wrong' + error.message)
     }
 })
 
 app.patch('/update', async (req, res) => {
     const { emailId, ...user } = req.body;
     console.log(emailId, user);
-    query = {"emailId":emailId}
+    query = { "emailId": emailId }
     try {
-        const response = await User.findOneAndUpdate(query, user,{returnDocument:"after"});
+        const response = await User.findOneAndUpdate(query, user, { returnDocument: "after" });
         console.log(response);
         res.send('Updated successfully')
     } catch (error) {
