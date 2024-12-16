@@ -75,7 +75,18 @@
 
  - Validate data in Signup API
  - Install bcrypt package
- - Create PasswordHash using bcrypt.hash & save the user is excrupted password
+ - Create PasswordHash using bcrypt.hash & save the user is encrypted password
+
+ # day 7
+- install cookie-parser
+ - just send a dummy cookie to user
+ - create GET /profile APi and check if you get the cookie back
+ - install jsonwebtoken 
+ - IN login API, after email and password validation, create e JWT token and send it to user in cookies
+ - read the cookies inside your profile API and find the logged in user
+ - userAuth Middleware
+ - Add the userAuth middle ware in profile API and a new sendConnectionRequest API
+ - Set the expiry of JWT token and cookies to 7 days
 
 
 '''

@@ -8,6 +8,8 @@ const { signUpValidation } = require('./helper/validation')
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser')
 
+const { userAuth } = require('./middlewares/auth');
+
 app.use(express.json())
 app.use(cookieParser())
 
@@ -37,118 +39,41 @@ app.post('/signup', async (req, res) => {
 app.post('/login', async (req, res) => {
     try {
         const { emailId, password } = req.body;
-
         const user = await User.findOne({ emailId: emailId });
-
         if (!user) {
             throw new Error('Invalid Credentials')
         }
-
         const checkPassword = await bcrypt.compare(password, user.password);
-
         if (!checkPassword) {
             throw new Error('Invalid Credentials')
         }
-        
-            const token = await jwt.sign({ _id: user.id }, "Dev@Tinder#1234")
-            res.cookie("token",token);
-            res.send('Login Successfully')
-        
-
+        const token = await jwt.sign({ _id: user.id }, "Dev@Tinder#1234", { expiresIn: '7h' });
+        res.cookie("token", token, {
+            expires : new Date(Date.now() + 7 * 3600000)
+        });
+        res.send('Login Successfully')
     } catch (error) {
-        res.status(401).send('Error :' + error.message)
+        res.status(401).send('Error :' + error?.message)
     }
 })
 
-app.get('/profile', async (req, res) => {
+app.get('/profile', userAuth, (req, res) => {
     try {
-        const { token } = req.cookies;
-        if (!token) {
-            throw new Error('Invalid Token')
-        }
-        const userId = await jwt.verify(token, "Dev@Tinder#1234");
-        console.log(userId);
-        const user = await User.findById(userId);
-        if (!user) {
-            throw new Error('Invalid User')
-        }
+        const user = req.user;
         res.send(user)
     } catch (error) {
         res.status(400).send('Something went wrong')
     }
-    
-})
-
-app.get('/user', async (req, res) => {
-    const emailId = req.body.emailId;
-    try {
-        const users = await User.find({ emailId: emailId });
-        if (users.length !== 0) {
-            res.send(users)
-        } else {
-            res.status(404).send('Data not found')
-        }
-    } catch (error) {
-        res.status(500).send('Something went wrong')
-    }
 
 })
 
-app.get('/feed', async (req, res) => {
-    try {
-        const users = await User.find({});
-        res.send(users)
-    } catch (error) {
-        res.status(500).send('Something went wrong')
-    }
+app.post('/send-connection', userAuth, (req, res) => {
+    const user = req.user;
+    console.log("sending connection request");
+    res.send(`${user.firstName} is Sending Connection `)
 })
 
-app.delete('/delete', async (req, res) => {
-    const userId = req.body.userId;
-    try {
-        const response = await User.findByIdAndDelete(userId);
-        // console.log(response);
-        res.send('Deleted user Successfully');
-    } catch (error) {
-        res.status(500).send('Something went wrong')
-    }
-})
 
-app.patch('/update/:id', async (req, res) => {
-    const id = req.params.id;
-    const user = req.body;
-    try {
-        const isAllowed = ["photoUrl", "gender", "age", "firstName", "skills"]
-        const isAllowedCheck = Object.keys(user).every(key => isAllowed.includes(key));
-        if (!isAllowedCheck) {
-            throw new Error('Cannot update')
-        }
-        if (user?.skills?.length > 10) {
-            throw new Error("Skill cannot be more than 10")
-        }
-        const response = await User.findByIdAndUpdate(id, user, {
-            returnDocument: 'after',
-            runValidators: true
-        });
-        // console.log(response);
-        res.send('Updated successfully')
-    } catch (error) {
-        res.status(500).send('Something went wrong' + error.message)
-    }
-})
-
-app.patch('/update', async (req, res) => {
-    const { emailId, ...user } = req.body;
-    console.log(emailId, user);
-    query = { "emailId": emailId }
-    try {
-        const response = await User.findOneAndUpdate(query, user, { returnDocument: "after" });
-        console.log(response);
-        res.send('Updated successfully')
-    } catch (error) {
-        res.status(500).send('Something went wrong')
-    }
-})
 
 connectDB()
     .then(() => {
