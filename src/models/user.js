@@ -1,12 +1,15 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 
-const userSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema(
+    {
     firstName: {
         type: String,
         minLength: 5,
         maxLength: 50,
-        required:true,
+        required: true,
     },
     lastName: {
         type: String,
@@ -29,15 +32,14 @@ const userSchema = new mongoose.Schema({
         validate(value) {
             if (!validator.isStrongPassword(value)) {
                 throw new Error("Not Strong Password");
-                
+
             }
         }
-        
+
     },
     age: {
         type: Number,
-        min :18
-        
+        min: 18
     },
     gender: {
         type: String,
@@ -48,7 +50,7 @@ const userSchema = new mongoose.Schema({
             }
         }
     },
-    photoUrl :{
+    photoUrl: {
         type: String,
         default: "https://geographyandyou.com/images/user-profile.png",
         validate(value) {
@@ -64,13 +66,30 @@ const userSchema = new mongoose.Schema({
     },
     about: {
         type: String,
-        default:"Hello ,How u doing,"  
+        default: "Hello ,How u doing,"
     },
     skills: {
-        type:[String]
+        type: [String]
     }
 }, {
-    timestamps:true
+    timestamps: true
 })
 
-module.exports = mongoose.model('User',userSchema)
+
+userSchema.methods.getJWT = async function () {
+    const user = this;
+    const token = await jwt.sign({ _id: user.id }, "Dev@Tinder#1234", { expiresIn: '7h' });
+    return token
+}
+
+userSchema.methods.validatePassword = async function (password) {
+    const user = this;
+    const passwordHash = user.password;
+    const isValidPassword = await bcrypt.compare(password, passwordHash);
+    return isValidPassword;
+
+}
+
+
+
+module.exports = mongoose.model('User', userSchema)

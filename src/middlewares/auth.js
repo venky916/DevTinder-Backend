@@ -15,7 +15,7 @@ const adminAuth = (req, res, next) => {
 const userAuth = async (req, res, next) => {
     try {
         const { token } = req.cookies;
-        console.log(token);
+        // console.log(token);
         if (!token) {
             throw new Error('Invalid Token')
         }
