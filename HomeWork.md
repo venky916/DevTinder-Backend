@@ -87,8 +87,15 @@
  - userAuth Middleware
  - Add the userAuth middle ware in profile API and a new sendConnectionRequest API
  - Set the expiry of JWT token and cookies to 7 days
-- Create userSchema method to getJWT() 
+ - Create userSchema method to getJWT() 
  - Create UserSchema method to comparepassword(passwordInputByUser)
+
+
+# day 8
+ - Explore tinder APIs
+ - Create a list all API you can think of in Dev Tinder
+ - Group multiple routes under repective routers
+
 
 
 '''
