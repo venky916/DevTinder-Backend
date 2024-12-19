@@ -17,7 +17,7 @@ connectionRouter.post('/send/request/:status/:id', userAuth, async (req, res) =>
         }
         const checkToUser = await User.findById(toUserId);
         if (!checkToUser) {
-            res.send(400).send({
+            return res.status(400).send({
                 "message":"User Does not exists"
             })
         }
@@ -28,7 +28,7 @@ connectionRouter.post('/send/request/:status/:id', userAuth, async (req, res) =>
             ]
         })
         if (existingConnection) {
-            res.status(400).send({
+            return res.status(400).send({
                 "message":"Connection request already exists"
             })
         }
@@ -38,12 +38,12 @@ connectionRouter.post('/send/request/:status/:id', userAuth, async (req, res) =>
             status
         })
         const data = await connectionModel.save();
-        res.json({
+        return res.json({
             "message": `${req.user.firstName}  ${status} ${checkToUser.firstName}`,
             data
         })
     } catch (error) {
-        res.status(400).send('Error :' + error.message);
+        return res.status(400).send('Error :' + error.message);
     }
 })
 
