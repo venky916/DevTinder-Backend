@@ -11,8 +11,11 @@
 - POST /profile/change-password
 
 ## connectionRequestRouter
-- POST /send/request/interested/:id
-- POST /send/request/ignored/:id  
+<!-- - POST /send/request/interested/:id
+- POST /send/request/ignored/:id   -->
+
+- POST /send/request/:status/:id  
+
 - POST /receive/request/accepted/:requestid
 - POST /receive/request/rejected/:requestid
 

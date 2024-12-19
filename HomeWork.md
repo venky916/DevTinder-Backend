@@ -105,6 +105,12 @@
  - Create PATCH /profile/password API => forgot password API
  - Make you validate all data in every POST, PATCH apis
 
-
+# day 9
+ - Create Connnection Request Schema
+ - Send Connection Request API
+ - Proper validation of Data
+ - Think about ALL corner cases
+ - $or query $and query in mongoose - https://www.mongodb.com/docs/manual/reference/operator/query-logical/
+ - schema.pre("save") function
 
 '''

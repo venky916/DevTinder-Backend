@@ -75,7 +75,6 @@ const userSchema = new mongoose.Schema(
     timestamps: true
 })
 
-
 userSchema.methods.getJWT = async function () {
     const user = this;
     const token = await jwt.sign({ _id: user.id }, "Dev@Tinder#1234", { expiresIn: '7h' });
@@ -89,7 +88,5 @@ userSchema.methods.validatePassword = async function (password) {
     return isValidPassword;
 
 }
-
-
 
 module.exports = mongoose.model('User', userSchema)
