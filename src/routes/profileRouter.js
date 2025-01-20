@@ -25,9 +25,7 @@ profileRouter.post('/profile/update',userAuth , async (req, res) => {
         const loggedInUser = req.user;
 
         Object.keys(req.body).forEach(key => loggedInUser[key] = req.body[key]);
-
-        await loggedInUser.save();
-
+        const response  = await loggedInUser.save();
         res.json({
             message: `${loggedInUser?.firstName} is updated successfully`,
             data: loggedInUser
