@@ -4,6 +4,7 @@ const { userAuth } = require('../middlewares/auth');
 const { validateEditProfileData } = require('../helper/validation');
 const validator = require('validator');
 const bcrypt = require('bcrypt');
+const { parseISO, formatISO } = require("date-fns");
 
 const profileRouter = express.Router();
 
@@ -19,18 +20,24 @@ profileRouter.get('/profile/view', userAuth, (req, res) => {
 
 profileRouter.post('/profile/update',userAuth , async (req, res) => {
     try {
-        if (!validateEditProfileData(req)) {
-            throw new Error('Cannot update these fields')
-        }
-        const loggedInUser = req.user;
+      if (!validateEditProfileData(req)) {
+        throw new Error("Cannot update these fields");
+      }
+      const loggedInUser = req.user;
 
-        Object.keys(req.body).forEach(key => loggedInUser[key] = req.body[key]);
-        const response  = await loggedInUser.save();
-        res.json({
-            message: `${loggedInUser?.firstName} is updated successfully`,
-            data: loggedInUser
-        })
+      // Ensure DOB is in ISO format if it exists
+      if (req.body?.DOB) {
+        loggedInUser.DOB = formatISO(parseISO(req.body?.DOB));
+      }
 
+      Object.keys(req.body).forEach(
+        (key) => (loggedInUser[key] = req.body[key])
+      );
+      const response = await loggedInUser.save();
+      res.json({
+        message: `${loggedInUser?.firstName} is updated successfully`,
+        data: loggedInUser,
+      });
     } catch (error) {
         res.status(400).send("ERROR : " + error.message);
     }
