@@ -4,11 +4,14 @@ const connectDB = require('./config/database');
 const app = express();
 const cookieParser = require('cookie-parser')
 const cors = require('cors');
-
 const authRouter = require('./routes/authRouter');
 const profileRouter = require('./routes/profileRouter');
 const connectionRouter = require('./routes/connectionRouter');
 const userRouter = require('./routes/userRouter');
+const chatRouter = require('./routes/chat');
+
+const http = require("http");
+const initializeSocket = require('../utils/socket');
 
 app.use(cors({
     origin: "http://localhost:5173",
@@ -22,13 +25,16 @@ app.use('/', authRouter);
 app.use('/', profileRouter);
 app.use('/', connectionRouter);
 app.use('/', userRouter);
+app.use("/",chatRouter);
 
+const server = http.createServer(app);
+initializeSocket(server);
 
 
 connectDB()
     .then(() => {
         console.log('Connected to Database successfully....')
-        app.listen(3000, () => {
+        server.listen(3000, () => {
             console.log("successfully listening on port 3000 ....!")
         })
     })
