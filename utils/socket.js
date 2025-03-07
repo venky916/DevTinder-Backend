@@ -12,7 +12,11 @@ const getSecretRoom = (userId, targetUserId) => {
 const initializeSocket = (server) => {
   const io = socket(server, {
     cors: {
-      origin: ["http://localhost:5173","https://dev-tinder-web-delta.vercel.app"]
+      origin: [
+        "http://localhost:5173",
+        "https://dev-tinder-web-delta.vercel.app",
+      ],
+      credentials: true,
     },
   });
 
@@ -59,12 +63,12 @@ const initializeSocket = (server) => {
       }
     );
 
-    socket.on("typing", ({userId, targetUserId}) => {
+    socket.on("typing", ({ userId, targetUserId }) => {
       const roomId = getSecretRoom(userId, targetUserId);
       socket.to(roomId).emit("typing");
     });
 
-    socket.on("stop typing", ({userId, targetUserId}) => {
+    socket.on("stop typing", ({ userId, targetUserId }) => {
       const roomId = getSecretRoom(userId, targetUserId);
       socket.to(roomId).emit("stop typing");
     });
